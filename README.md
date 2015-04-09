@@ -3,4 +3,6 @@
 
 页面名称jquery-price-calculation.html
 
-js中data为产品名称和价钱以“,”分割的数组。
+JS中data为产品名称和价钱以","分割的数组，两边为名称和价格。
+
+disdata为一些打折后的价格，只填写数字，后边自行脑补一个百分号。
