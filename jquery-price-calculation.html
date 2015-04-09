@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <title>jQuery商品价钱计算工具</title>
+    <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <style type="text/css">
+        .width-100 {
+            width: 100px;
+            vertical-align: middle;
+            text-align: right;
+            font-weight: bold;
+            padding-right: 10px;
+        }
+
+        .width-60 {
+            width: 60px;
+        }
+    </style>
+    <script type="text/javascript">
+        //名称和价格的一维数组
+        var data = ["iPhone,2000", "核桃,15", "枣,20", "1元,1"];
+        //顺便计算折扣
+        var disdata = [99, 85, 60, 4, 2];
+
+        $(document).ready(function () {
+            var html = "";
+            $.each(data, function (key, val) {
+                var name = val.split(',')[0];
+                html += "<div class=\"pure-control-group\"><div class=\"pure-u-1-8 width-100\">" + name + "</div><input class=\"pure-u-1-8 width-60\" type=\"text\" id=\"i" + key + "\" value=\"0\">&nbsp;<button class=\"down pure-button\">-</button>&nbsp;<button class=\"up pure-button pure-button-primary\">+</button></div>";
+            });
+            $(".list").html(html);
+        });
+        //绑定件数 +1 事件
+        $(document).on("click", ".up", function () {
+            var t = $(this).siblings("input");
+            var num = t.val();
+            t.val(parseInt(num) + 1);
+            count();
+        });
+        //绑定件数 -1 事件
+        $(document).on("click", ".down", function () {
+            var t = $(this).siblings("input");
+            var num = t.val();
+            //保证不为负数
+            if (num > 0) {
+                t.val(parseInt(num) - 1);
+            }
+            count();
+        });
+
+
+        $(document).on("change", "input", function () {
+            count();
+        });
+        //计算总价，并列出件数不为0的商品清单
+        function count() {
+            var total = 0;
+            var result = "";
+            $.each(data, function (key, val) {
+                var name = val.split(',')[0];
+                var price = val.split(',')[1];
+                var num = $("#i" + key).val();
+                if (num != 0) {
+                    result += name + " " + num + " / ";
+                }
+                total += price * num;
+            });
+            discount(total);
+            $(".total").html("总价：" + total);
+            $(".result").html("清单：" + result);
+        }
+        function discount(num) {
+            var discount = "";
+            $.each(disdata, function (key, val) {
+                discount += val + "%：" + (num / 100 * val).toFixed(2) + "<br />";
+            });
+            $(".discount").html("折扣：<br />" + discount);
+        }
+    </script>
+</head>
+<body>
+<div class="list pure-form pure-form-aligned">
+</div>
+<div class="total"></div>
+<div class="result"></div>
+<div class="discount"></div>
+</body>
+</html>
